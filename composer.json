@@ -1,0 +1,19 @@
+{
+    "name": "vitaliy/php_pro2",
+    "type": "project",
+    "require": {
+        "guzzlehttp/guzzle": "7.*"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Vitaliy\\PhpPro2\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vitaliy Blazhko"
+        }
+    ],
+    "minimum-stability": "stable"
+}
