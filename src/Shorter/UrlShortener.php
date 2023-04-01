@@ -5,57 +5,64 @@ namespace Vitaliy\PhpPro2\Shorter;
 use Vitaliy\PhpPro2\Shorter\Interfaces\IUrlDecoder;
 use Vitaliy\PhpPro2\Shorter\Interfaces\IUrlEncoder;
 use Vitaliy\PhpPro2\Shorter\UrlValidator;
+use Vitaliy\PhpPro2\Shorter\Interfaces\LoggerInterface;
 
 use InvalidArgumentException;
 
 class UrlShortener implements IUrlEncoder, IUrlDecoder
 {
     const CODE_LENGTH = 10;
-    const CODE_FILE = __DIR__ . '/../../short_urls2.txt';
 
     private UrlValidator $validator;
+    private CodeFileStorage $storage;
+    private LoggerInterface $logger;
 
-    public function __construct(UrlValidator $validator)
+    public function __construct(UrlValidator $validator, CodeFileStorage $storage, LoggerInterface $logger)
     {
         $this->validator = $validator;
+        $this->storage = $storage;
+        $this->logger = $logger;
+        $this->validator->__construct($logger);
     }
 
-    /**
-     * @param string $url
-     * @return string
-     * @throws InvalidArgumentException
-     */
     public function encode(string $url): string
     {
-        $this->validator->validate($url);
+        try {
+            $this->validator->validate($url);
 
-        // Generate a random code
-        $code = substr(md5(mt_rand()), 0, self::CODE_LENGTH);
+            // Generate a random code
+            $code = substr(md5(mt_rand()), 0, self::CODE_LENGTH);
 
-        // Save the code to a file
-        file_put_contents(self::CODE_FILE, "{$code} {$url}\n", FILE_APPEND);
+            // Save the code to a file
+            $this->storage->save($code, $url);
 
-        return $code;
+            $this->logger->info("URL encoded: {$url} -> {$code}");
+
+            return $code;
+        }
+        catch (\Exception $e) {
+            $this->logger->error("Failed to encode URL: {$url}", ['exception' => $e]);
+            throw $e;
+        }
     }
 
-    /**
-     * @param string $code
-     * @return string
-     * @throws InvalidArgumentException
-     */
     public function decode(string $code): string
     {
-        // Read the short URLs file and find the URL corresponding to the given code
-        $lines = file(self::CODE_FILE);
-        foreach ($lines as $line) {
-            list($savedCode, $url) = explode(' ', trim($line));
-            if ($savedCode === $code) {
-                $this->validator->validate($url);
+        try {
+            $url = $this->storage->find($code);
 
-                return $url;
+            if ($url === null) {
+                throw new InvalidArgumentException('Code not found');
             }
-        }
 
-        throw new InvalidArgumentException('Code not found');
+            $this->validator->validate($url);
+
+            $this->logger->info("URL decoded: {$code} -> {$url}");
+
+            return $url;
+        } catch (\Exception $e) {
+            $this->logger->error("Failed to decode URL: {$code}", ['exception' => $e]);
+            throw $e;
+        }
     }
 }

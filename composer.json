@@ -2,7 +2,8 @@
     "name": "vitaliy/php_pro2",
     "type": "project",
     "require": {
-        "guzzlehttp/guzzle": "7.*"
+        "guzzlehttp/guzzle": "7.*",
+        "monolog/monolog": "^3.3"
     },
     "license": "MIT",
     "autoload": {
