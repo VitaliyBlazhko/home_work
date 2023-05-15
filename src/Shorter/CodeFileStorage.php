@@ -2,7 +2,9 @@
 
 namespace Vitaliy\PhpPro2\Shorter;
 
-class CodeFileStorage
+use Vitaliy\PhpPro2\Shorter\Interfaces\ICodeStorageInterface;
+
+class CodeFileStorage implements ICodeStorageInterface
 {
     const CODE_FILE = __DIR__ . '/../../short_urls.txt';
 

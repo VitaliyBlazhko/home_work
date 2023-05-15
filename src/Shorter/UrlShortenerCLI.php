@@ -4,7 +4,7 @@ namespace Vitaliy\PhpPro2\Shorter;
 
 use Vitaliy\PhpPro2\Shorter\UrlShortener;
 use InvalidArgumentException;
-use Vitaliy\PhpPro2\Shorter\Interfaces\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 use Vitaliy\PhpPro2\Shorter\UrlValidator;
 

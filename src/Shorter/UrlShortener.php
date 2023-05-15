@@ -2,10 +2,11 @@
 
 namespace Vitaliy\PhpPro2\Shorter;
 
+use Vitaliy\PhpPro2\Shorter\Interfaces\ICodeStorageInterface;
 use Vitaliy\PhpPro2\Shorter\Interfaces\IUrlDecoder;
 use Vitaliy\PhpPro2\Shorter\Interfaces\IUrlEncoder;
 use Vitaliy\PhpPro2\Shorter\UrlValidator;
-use Vitaliy\PhpPro2\Shorter\Interfaces\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 use InvalidArgumentException;
 
@@ -13,16 +14,10 @@ class UrlShortener implements IUrlEncoder, IUrlDecoder
 {
     const CODE_LENGTH = 10;
 
-    private UrlValidator $validator;
-    private CodeFileStorage $storage;
-    private LoggerInterface $logger;
 
-    public function __construct(UrlValidator $validator, CodeFileStorage $storage, LoggerInterface $logger)
+
+    public function __construct(protected UrlValidator $validator, protected ICodeStorageInterface $storage, protected LoggerInterface $logger)
     {
-        $this->validator = $validator;
-        $this->storage = $storage;
-        $this->logger = $logger;
-        $this->validator->__construct($logger);
     }
 
     public function encode(string $url): string

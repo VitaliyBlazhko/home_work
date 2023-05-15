@@ -3,17 +3,15 @@
 namespace Vitaliy\PhpPro2\Shorter;
 
 use InvalidArgumentException;
-use Vitaliy\PhpPro2\Shorter\Interfaces\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 
 
 class UrlValidator
 {
-    private $logger;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(protected LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     public function validate(string $url): void

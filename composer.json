@@ -3,7 +3,8 @@
     "type": "project",
     "require": {
         "guzzlehttp/guzzle": "7.*",
-        "monolog/monolog": "^3.3"
+        "monolog/monolog": "^3.3",
+        "illuminate/database": "^10.10"
     },
     "license": "MIT",
     "autoload": {
